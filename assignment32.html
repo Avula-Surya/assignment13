@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IST Date and Time</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+      #dateTime {
+        font-size: 24px;
+        font-weight: bold;
+        color: blue;
+        margin-bottom: 20px;
+      }
+      button {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dateTime"></div>
+    <button onclick="startTimer()">Click me</button>
+    <button onclick="stopTimer()">stop</button>
+
+    <script>
+      let timerId;
+
+      function updateDateTime() {
+        // Get current UTC time
+        const now = new Date();
+        const utcTime = now.getTime(); // UTC time in milliseconds
+
+        // Add IST offset (5 hours 30 minutes = 5.5 * 60 * 60 * 1000 milliseconds)
+        const istOffset = 5.5 * 60 * 60 * 1000; // 19,800,000 ms
+        const istTime = new Date(utcTime + istOffset);
+
+        // Format the date and time
+        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const months = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+
+        const dayName = days[istTime.getUTCDay()];
+        const monthName = months[istTime.getUTCMonth()];
+        const date = String(istTime.getUTCDate()).padStart(2, "0");
+        const year = istTime.getUTCFullYear();
+
+        // Convert to 12-hour format with AM/PM
+        let hours = istTime.getUTCHours();
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12; // Convert 0 to 12 for midnight
+        const minutes = String(istTime.getUTCMinutes()).padStart(2, "0");
+        const seconds = String(istTime.getUTCSeconds()).padStart(2, "0");
+
+        const timeString = `${dayName} ${monthName} ${date} ${year} ${hours}:${minutes}:${seconds} ${ampm} IST`;
+        document.getElementById("dateTime").textContent = timeString;
+
+        // Debug: Log the calculated IST time to the console
+        console.log("Calculated IST Time:", timeString);
+      }
+
+      function startTimer() {
+        if (timerId) clearInterval(timerId);
+        updateDateTime();
+        timerId = setInterval(updateDateTime, 1000);
+      }
+
+      function stopTimer() {
+        if (timerId) {
+          clearInterval(timerId);
+          timerId = null;
+        }
+      }
+
+      // Start the timer automatically
+      startTimer();
+    </script>
+  </body>
+</html>

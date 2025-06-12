@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Countdown Timer</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #e6f0fa;
+      }
+      h1 {
+        font-size: 48px;
+        color: #666;
+        margin-bottom: 20px;
+      }
+      #timer {
+        font-size: 72px;
+        font-weight: bold;
+        margin-bottom: 30px;
+      }
+      button {
+        padding: 10px 30px;
+        margin: 5px;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      #start {
+        background-color: #5bc0de;
+        color: white;
+      }
+      #stop {
+        background-color: #d9534f;
+        color: white;
+      }
+      #reset {
+        background-color: #c3e6cb;
+        color: #333;
+      }
+      button:hover {
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>TIMER</h1>
+    <div id="timer">25:00</div>
+    <button id="start" onclick="startTimer()">START</button>
+    <button id="stop" onclick="stopTimer()">STOP</button>
+    <button id="reset" onclick="resetTimer()">RESET</button>
+
+    <script>
+      let time = 25 * 60; // 25 minutes in seconds
+      let timerId = null;
+      const timerDisplay = document.getElementById("timer");
+
+      function updateDisplay() {
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        timerDisplay.textContent = `${String(minutes).padStart(
+          2,
+          "0"
+        )}:${String(seconds).padStart(2, "0")}`;
+      }
+
+      function startTimer() {
+        if (timerId) return; // Prevent multiple intervals
+        timerId = setInterval(() => {
+          if (time <= 0) {
+            clearInterval(timerId);
+            timerId = null;
+            return;
+          }
+          time--;
+          updateDisplay();
+        }, 1000);
+      }
+
+      function stopTimer() {
+        if (timerId) {
+          clearInterval(timerId);
+          timerId = null;
+        }
+      }
+
+      function resetTimer() {
+        stopTimer();
+        time = 25 * 60; // Reset to 25 minutes
+        updateDisplay();
+      }
+
+      // Initialize the display
+      updateDisplay();
+    </script>
+  </body>
+</html>
